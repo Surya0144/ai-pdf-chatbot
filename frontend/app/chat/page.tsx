@@ -58,6 +58,8 @@ export default function ChatPage() {
           interactive
           parallax
           parallaxStrength={0.3}
+          topWavePosition={0.2}
+          middleWavePosition={0.5}
         />
       </div>
 
