@@ -6,10 +6,6 @@ from dotenv import load_dotenv
 
 logger = logging.getLogger("uvicorn.error")
 
-# Load environment variables from frontend/.env.local (for development)
-frontend_env_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "frontend", ".env.local")
-load_dotenv(frontend_env_path)
-
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 

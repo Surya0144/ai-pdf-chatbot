@@ -11,7 +11,7 @@ app = FastAPI(title="AI Document Search Backend")
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "https://ai-pdf-chatbot-hzbda1731-suryas-projects-3abf6578.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
