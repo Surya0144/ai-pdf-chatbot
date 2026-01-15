@@ -1,3 +1,4 @@
+import os
 import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,10 +9,20 @@ logger = logging.getLogger("uvicorn.error")
 
 app = FastAPI(title="AI Document Search Backend")
 
-# CORS configuration
+# CORS configuration - support multiple Vercel preview URLs and production
+# Get allowed origins from environment variable or use defaults
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000,https://ai-pdf-chatbot-hzbda1731-suryas-projects-3abf6578.vercel.app"
+).split(",")
+
+# Also allow all Vercel preview deployments for this project
+VERCEL_PREVIEW_PATTERN = "https://*.vercel.app"
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://ai-pdf-chatbot-hzbda1731-suryas-projects-3abf6578.vercel.app"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",  # Allow all Vercel preview URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

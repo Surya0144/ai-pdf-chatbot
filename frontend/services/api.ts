@@ -72,10 +72,14 @@ export const sendChatMessage = async (
   return response.data;
 };
 
-// Test backend connection
+// Test backend connection - use the configured API base URL
 export const testConnection = async (): Promise<boolean> => {
   try {
-    const response = await axios.get("http://localhost:8000/health");
+    // Extract base URL without /api suffix for health check
+    const baseUrl = API_BASE_URL.replace(/\/api\/?$/, "");
+    const response = await axios.get(`${baseUrl}/health`, {
+      timeout: 10000,
+    });
     return response.data.status === "up";
   } catch (error) {
     console.error("Backend connection test failed:", error);

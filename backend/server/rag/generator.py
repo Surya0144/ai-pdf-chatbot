@@ -4,6 +4,9 @@ import requests
 from requests.exceptions import RequestException, Timeout
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
+
 logger = logging.getLogger("uvicorn.error")
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
