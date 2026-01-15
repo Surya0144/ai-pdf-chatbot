@@ -18,7 +18,7 @@ const itemVariants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.6, ease: "easeOut" },
   },
 };
 
@@ -88,10 +88,7 @@ export default function Home() {
             className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-indigo-100 rounded-2xl p-6 shadow-sm mb-6"
           >
             <h2 className="text-xl font-semibold text-gray-900 mb-3 flex items-center justify-center gap-2">
-              <motion.span
-                
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-600 text-white text-sm font-bold shadow-md"
-              >
+              <motion.span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-600 text-white text-sm font-bold shadow-md">
                 AI
               </motion.span>
               <span>How it works</span>
