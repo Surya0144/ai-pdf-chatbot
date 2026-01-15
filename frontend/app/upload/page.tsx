@@ -91,6 +91,8 @@ export default function UploadPage() {
           mouseDamping={0.1}
           parallax
           parallaxStrength={0.4}
+          topWavePosition={{ x: 10.0, y: 0.5, rotate: -0.4 }}
+          middleWavePosition={{ x: 5.0, y: 0.0, rotate: 0.2 }}
         />
       </div>
 
