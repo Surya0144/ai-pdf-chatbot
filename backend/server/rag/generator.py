@@ -12,7 +12,7 @@ logger = logging.getLogger("uvicorn.error")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-MODEL_NAME = "mistralai/mistral-7b-instruct:free"
+MODEL_NAME = "google/gemma-7b-it:free"
 
 
 def generate_answer(question: str, context_chunks: list[str]) -> str:
