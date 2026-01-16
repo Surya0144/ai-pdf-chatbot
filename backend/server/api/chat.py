@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from server.rag.retriever import retrieve_context
 from server.rag.generator import generate_answer
-from server.vectorstore.chroma import _collection
+from server.vectorstore.chroma import get_collection
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -74,5 +74,26 @@ def chat(request: ChatRequest):
 
 @router.get("/uploaded-pdfs")
 def get_uploaded_pdfs():
-    # Simple test endpoint - return empty list for now
-    return {"pdfs": []}
+    try:
+        # Get the current collection
+        collection = get_collection()
+
+        # Get all metadata from the collection
+        results = collection.get(include=["metadatas"])
+        metadatas = results.get("metadatas", [])
+
+        # Extract unique source filenames
+        sources = set()
+        if metadatas:
+            for metadata in metadatas:
+                if metadata and isinstance(metadata, dict) and "source" in metadata:
+                    source = metadata["source"]
+                    if source:
+                        sources.add(str(source))
+
+        return {"pdfs": list(sources)}
+
+    except Exception as e:
+        logger.error(f"Error retrieving uploaded PDFs: {str(e)}", exc_info=True)
+        # Return empty list instead of 500 error for better UX
+        return {"pdfs": []}
