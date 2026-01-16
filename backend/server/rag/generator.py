@@ -12,7 +12,8 @@ logger = logging.getLogger("uvicorn.error")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-MODEL_NAME = "google/gemma-7b-it:free"
+# Use a reliable free model from OpenRouter
+MODEL_NAME = "meta-llama/llama-3.1-8b-instruct:free"
 
 
 def generate_answer(question: str, context_chunks: list[str]) -> str:
@@ -66,6 +67,9 @@ Answer:"""
 
         status_code = response.status_code
         logger.info(f"OpenRouter response status: {status_code}")
+        
+        # Log response content for debugging
+        logger.debug(f"OpenRouter response content: {response.text}")
 
         if status_code == 401:
             logger.error("OpenRouter API: Unauthorized - Check API key")
@@ -76,12 +80,21 @@ Answer:"""
         elif status_code == 429:
             logger.error("OpenRouter API: Rate limit exceeded")
             raise RuntimeError("Rate limit exceeded. Please try again later.")
+        elif status_code == 404:
+            logger.error(f"OpenRouter API: Not Found - Check endpoint URL or model availability: {OPENROUTER_API_URL}")
+            raise RuntimeError("API endpoint not found. The service might be unavailable or the model might have been removed.")
         elif status_code >= 500:
             logger.error(f"OpenRouter API: Server error {status_code}")
             raise RuntimeError(f"OpenRouter service error: {status_code}")
+        elif status_code != 200:
+            logger.error(f"OpenRouter API: Unexpected status code {status_code}")
+            raise RuntimeError(f"Unexpected API response: {status_code}")
 
-        response.raise_for_status()
-        data = response.json()
+        try:
+            data = response.json()
+        except Exception as e:
+            logger.error(f"Failed to parse OpenRouter response: {str(e)}")
+            raise RuntimeError("Failed to parse response from LLM service")
 
         if "choices" not in data or len(data["choices"]) == 0:
             logger.error(f"Unexpected response format: {data}")
