@@ -33,9 +33,10 @@ export default function ChatPage() {
     const fetchUploadedPDFs = async () => {
       try {
         const response: UploadedPDFsResponse = await getUploadedPDFs();
-        setUploadedPDFs(response.pdfs);
+        setUploadedPDFs(response.pdfs || []);
       } catch (error) {
         console.error("Failed to fetch uploaded PDFs:", error);
+        setUploadedPDFs([]); // Set empty array on error
       }
     };
     fetchUploadedPDFs();

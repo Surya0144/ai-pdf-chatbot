@@ -74,25 +74,5 @@ def chat(request: ChatRequest):
 
 @router.get("/uploaded-pdfs")
 def get_uploaded_pdfs():
-    try:
-        # Get all metadata from the collection
-        results = _collection.get(include=["metadatas"])
-        metadatas = results.get("metadatas", [])
-
-        # Extract unique source filenames
-        sources = set()
-        if metadatas:  # Check if metadatas is not None or empty
-            for metadata in metadatas:
-                if metadata and "source" in metadata:
-                    source = metadata["source"]
-                    # Ensure source is hashable
-                    if isinstance(source, (str, int, float, bool, type(None))):
-                        sources.add(source)
-                    else:
-                        sources.add(str(source))
-
-        return {"pdfs": list(sources)}
-
-    except Exception as e:
-        logger.error(f"Error retrieving uploaded PDFs: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve uploaded PDFs: {str(e)}")
+    # Simple test endpoint - return empty list for now
+    return {"pdfs": []}
