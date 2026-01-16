@@ -67,7 +67,7 @@ export default function UploadPage() {
           `Server error: ${error.response.status}`;
       } else if (error.request) {
         errorMessage =
-          "Network error: Could not reach the server. Make sure the backend is running on http://localhost:8000";
+          "Network error: Could not reach the server. Please try again later.";
       } else {
         errorMessage = error.message || "Unknown error occurred";
       }
@@ -140,7 +140,7 @@ export default function UploadPage() {
               >
                 <p className="font-semibold">⚠️ Backend Connection Issue</p>
                 <p className="text-sm mt-1">
-                  Cannot reach backend at http://localhost:8000.
+                  Cannot reach the backend server. Please try again later.
                 </p>
               </motion.div>
             )}
