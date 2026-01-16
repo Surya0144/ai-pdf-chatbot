@@ -9,7 +9,7 @@ load_dotenv()
 
 logger = logging.getLogger("uvicorn.error")
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Use a reliable free model from OpenRouter
