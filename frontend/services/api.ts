@@ -77,7 +77,7 @@ export interface UploadedPDFsResponse {
 }
 
 export const getUploadedPDFs = async (): Promise<UploadedPDFsResponse> => {
-  const response = await api.get<UploadedPDFsResponse>("/chat/uploaded-pdfs");
+  const response = await api.get<UploadedPDFsResponse>("/uploaded-pdfs");
   return response.data;
 };
 
