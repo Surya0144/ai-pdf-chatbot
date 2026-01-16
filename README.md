@@ -1,454 +1,232 @@
-# AI Document Search - RAG System
+# AI Document Search
 
-A production-ready AI-powered document search application that allows users to upload PDF documents and ask natural-language questions. Answers are grounded strictly in the uploaded documents using Retrieval-Augmented Generation (RAG).
+A modern, full-stack web application that enables intelligent document search and Q&A using Retrieval-Augmented Generation (RAG). Upload PDF documents and chat with them to get accurate, context-aware answers powered by advanced AI models.
 
-## 🎯 Features
+## 🚀 Features
 
-- **PDF Upload**: Upload and process PDF documents
-- **Semantic Search**: Find relevant information using vector embeddings
-- **AI-Powered Q&A**: Ask questions and get answers grounded in your documents
-- **Source Attribution**: See which documents were used to generate each answer
-- **Modern UI**: Clean, responsive web interface built with Next.js and Tailwind CSS
-- **Free Tier**: Uses free OpenRouter models (no paid APIs required)
+- **PDF Document Upload**: Securely upload and process PDF files
+- **Intelligent Chunking**: Automatic text segmentation for optimal retrieval
+- **Vector Embeddings**: State-of-the-art embeddings using OpenAI's text-embedding-3-small
+- **Semantic Search**: Find relevant information using vector similarity
+- **AI-Powered Q&A**: Get precise answers using Meta's Llama 3.1 8B model
+- **Source Citations**: Every answer includes references to source documents
+- **Modern UI**: Beautiful, responsive interface with smooth animations
+- **Real-time Chat**: Interactive conversation interface
+- **CORS Support**: Configurable cross-origin resource sharing
+- **Production Ready**: Deployed on Render with persistent storage
 
 ## 🏗️ Architecture
 
+### Frontend (Next.js + TypeScript)
+
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript for type safety
+- **Styling**: Tailwind CSS with custom animations
+- **Animations**: Framer Motion for smooth interactions
+- **HTTP Client**: Axios for API communication
+- **Components**: Modular, reusable React components
+
+### Backend (FastAPI + Python)
+
+- **Framework**: FastAPI for high-performance APIs
+- **Language**: Python 3.10+
+- **Vector Database**: ChromaDB for efficient similarity search
+- **LLM Integration**: OpenRouter API for AI model access
+- **PDF Processing**: PyPDF for text extraction
+- **Embeddings**: OpenAI embeddings via OpenRouter
+- **CORS**: Configurable cross-origin middleware
+
+## 🔄 Workflow
+
+1. **Document Upload**
+
+   - User uploads PDF file through web interface
+   - Backend validates file type and extracts text
+   - Text is chunked into manageable segments
+
+2. **Processing Pipeline**
+
+   - Each chunk is converted to vector embeddings
+   - Embeddings stored in ChromaDB with metadata
+   - Documents indexed for fast retrieval
+
+3. **Query Processing**
+
+   - User submits natural language question
+   - Query converted to embedding vector
+   - Semantic search finds relevant document chunks
+
+4. **Answer Generation**
+   - Retrieved context sent to LLM with question
+   - AI generates accurate, contextual response
+   - Source citations included in response
+
+## 📋 Prerequisites
+
+- **Backend**:
+
+  - Python 3.10 or higher
+  - OpenRouter API key with credits
+  - Internet connection for API calls
+
+- **Frontend**:
+
+  - Node.js 18 or higher
+  - npm or yarn package manager
+
+- **Deployment**:
+  - Render account for backend hosting
+  - Vercel account for frontend hosting (optional)
+
+## 🚀 Deployment
+
+### Backend Deployment (Render)
+
+1. **Fork/Clone Repository**
+
+   ```bash
+   git clone <your-repo-url>
+   cd llm-pdf-search/backend
+   ```
+
+2. **Environment Setup**
+
+   - Create account at [OpenRouter.ai](https://openrouter.ai)
+   - Generate API key with sufficient credits
+   - Set environment variable: `OPENROUTER_API_KEY=your_api_key_here`
+
+3. **Deploy to Render**
+
+   - Connect GitHub repository to Render
+   - Use `render.yaml` blueprint for automatic deployment
+   - Set environment variables in Render dashboard:
+     - `OPENROUTER_API_KEY`: Your OpenRouter API key
+     - `ALLOWED_ORIGINS`: Comma-separated list of allowed frontend URLs
+     - `PYTHON_VERSION`: 3.10
+
+4. **Verify Deployment**
+   - Check `/health` endpoint returns `{"status": "up"}`
+   - Test `/docs` for API documentation
+
+### Frontend Deployment (Vercel)
+
+1. **Navigate to Frontend**
+
+   ```bash
+   cd ../frontend
+   ```
+
+2. **Environment Configuration**
+
+   ```bash
+   # Create .env.local
+   NEXT_PUBLIC_API_BASE_URL=https://your-render-app.onrender.com/api
+   ```
+
+3. **Deploy to Vercel**
+   - Connect GitHub repository
+   - Set environment variable: `NEXT_PUBLIC_API_BASE_URL`
+   - Deploy automatically on push
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+**Backend (.env)**
+
+```bash
+OPENROUTER_API_KEY=your_openrouter_api_key
+ALLOWED_ORIGINS=https://your-frontend.vercel.app,https://another-domain.com
 ```
-┌─────────────┐
-│   Frontend  │  Next.js + TypeScript + Tailwind CSS
-│  (Port 3000)│
-└──────┬──────┘
-       │ HTTP/REST
-       │
-┌──────▼──────┐
-│   Backend   │  FastAPI + Python
-│  (Port 8000)│
-└──────┬──────┘
-       │
-       ├──► PDF Upload
-       │    └─► Text Extraction (pypdf)
-       │
-       ├──► Text Chunking (custom, 500 chars, 100 overlap)
-       │
-       ├──► Embeddings (Sentence Transformers: all-MiniLM-L6-v2)
-       │
-       ├──► Vector Store (ChromaDB - persistent)
-       │
-       ├──► Semantic Retrieval (top-k similarity search)
-       │
-       └──► LLM Generation (OpenRouter: llama-3.1-8b-instruct:free)
-            └─► Answer + Sources
+
+**Frontend (.env.local)**
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=https://your-backend.onrender.com/api
 ```
 
-### Tech Stack
+### Model Configuration
 
-**Backend:**
-
-- Python 3.10+
-- FastAPI (REST API)
-- Uvicorn (ASGI server)
-- Sentence Transformers (embeddings)
-- ChromaDB (vector database)
-- OpenRouter API (LLM)
-
-**Frontend:**
-
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Axios (HTTP client)
+- **Embedding Model**: `openai/text-embedding-3-small`
+- **Chat Model**: `meta-llama/llama-3.1-8b-instruct:free`
+- **Chunk Size**: Configurable in `chunker.py`
+- **Top-K Retrieval**: Default 5 chunks per query
 
 ## 📁 Project Structure
 
 ```
-llm_pdf_search/
 ├── backend/
 │   ├── server/
-│   │   ├── main.py              # FastAPI app + CORS
+│   │   ├── main.py              # FastAPI application
 │   │   ├── api/
-│   │   │   ├── upload.py        # PDF upload endpoint
-│   │   │   └── chat.py          # Chat/Q&A endpoint
+│   │   │   ├── chat.py          # Chat endpoint
+│   │   │   └── upload.py        # File upload endpoint
+│   │   ├── rag/
+│   │   │   ├── generator.py     # LLM integration
+│   │   │   └── retriever.py     # Vector search
 │   │   ├── ingestion/
+│   │   │   ├── embedder.py      # Embedding generation
 │   │   │   ├── loader.py        # PDF text extraction
-│   │   │   ├── chunker.py       # Text chunking logic
-│   │   │   └── embedder.py      # Embedding generation
-│   │   ├── vectorstore/
-│   │   │   └── chroma.py        # ChromaDB operations
-│   │   └── rag/
-│   │       ├── retriever.py     # Semantic retrieval
-│   │       └── generator.py     # LLM answer generation
-│   ├── uploads/                 # Uploaded PDFs
-│   ├── chroma_db/               # ChromaDB persistent storage
-│   └── requirements.txt
-│
-└── frontend/
-    ├── app/
-    │   ├── page.tsx             # Home page
-    │   ├── upload/
-    │   │   └── page.tsx         # Upload page
-    │   ├── chat/
-    │   │   └── page.tsx         # Chat interface
-    │   └── layout.tsx
-    ├── services/
-    │   └── api.ts               # API client
-    └── package.json
+│   │   │   └── chunker.py       # Text chunking
+│   │   └── vectorstore/
+│   │       └── chroma.py        # Vector database
+│   ├── requirements.txt         # Python dependencies
+│   ├── render.yaml             # Render deployment config
+│   └── chroma_db/              # Vector database storage
+├── frontend/
+│   ├── app/
+│   │   ├── page.tsx            # Home page
+│   │   ├── upload/
+│   │   │   └── page.tsx        # Upload interface
+│   │   └── chat/
+│   │       └── page.tsx        # Chat interface
+│   ├── components/
+│   │   ├── FloatingLines.jsx   # Animated background
+│   │   └── Aurora.jsx          # Aurora effect
+│   ├── services/
+│   │   └── api.ts              # API client
+│   └── package.json            # Node dependencies
+└── README.md
 ```
 
-## 🚀 Setup Instructions
-
-### Prerequisites
-
-- Python 3.10 or higher
-- Node.js 18+ and npm
-- OpenRouter API key (free tier available at [openrouter.ai](https://openrouter.ai))
-
-### Backend Setup
-
-1. **Navigate to backend directory:**
-
-   ```bash
-   cd backend
-   ```
-
-2. **Create virtual environment:**
-
-   ```bash
-   python -m venv .venv
-   ```
-
-3. **Activate virtual environment:**
-
-   - Windows:
-     ```bash
-     .venv\Scripts\activate
-     ```
-   - Linux/Mac:
-     ```bash
-     source .venv/bin/activate
-     ```
-
-4. **Install dependencies:**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-5. **Set API key in frontend/.env.local:**
-   Add your OpenRouter API key to the `frontend/.env.local` file:
-
-   ```
-   OPENROUTER_API_KEY=your-api-key-here
-   ```
-
-6. **Run the backend server:**
-
-   ```bash
-   uvicorn server.main:app --reload --port 8000
-   ```
-
-   The API will be available at `http://localhost:8000`
-
-   - API docs: `http://localhost:8000/docs`
-
-### Frontend Setup
-
-1. **Navigate to frontend directory:**
-
-   ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies:**
-
-   ```bash
-   npm install
-   ```
-
-3. **Run the development server:**
-
-   ```bash
-   npm run dev
-   ```
-
-   The app will be available at `http://localhost:3000`
-
-## 📖 Usage
-
-1. **Upload Documents:**
-
-   - Go to the Upload page
-   - Select a PDF file
-   - Click "Upload Document"
-   - Wait for processing confirmation
-
-2. **Ask Questions:**
-
-   - Navigate to the Chat page
-   - Type your question in natural language
-   - Press Enter or click Send
-   - View the answer with source documents
-
-3. **Example Questions:**
-   - "What is the main topic of this document?"
-   - "Summarize the key points"
-   - "What does the document say about [topic]?"
-
-## 🔌 API Endpoints
-
-### POST `/api/upload`
-
-Upload a PDF document for processing.
-
-**Request:**
-
-- Content-Type: `multipart/form-data`
-- Body: PDF file
-
-**Response:**
-
-```json
-{
-  "filename": "document.pdf",
-  "chunks": 42,
-  "status": "stored"
-}
-```
-
-### POST `/api/chat`
-
-Ask a question about uploaded documents.
-
-**Request:**
-
-```json
-{
-  "question": "What is federated learning?"
-}
-```
-
-**Response:**
-
-```json
-{
-  "question": "What is federated learning?",
-  "answer": "Federated learning is a machine learning approach...",
-  "sources": ["document1.pdf", "document2.pdf"]
-}
-```
-
-## 🧠 How RAG Works
-
-1. **Document Ingestion:**
-
-   - PDF text is extracted using `pypdf`
-   - Text is split into overlapping chunks (500 chars, 100 overlap)
-   - Each chunk is embedded using Sentence Transformers
-
-2. **Vector Storage:**
-
-   - Embeddings are stored in ChromaDB with metadata (source filename)
-   - ChromaDB provides persistent storage and fast similarity search
-
-3. **Query Processing:**
-
-   - User question is embedded using the same model
-   - Top-k most similar chunks are retrieved (default: 5)
-   - Retrieved chunks are passed as context to the LLM
-
-4. **Answer Generation:**
-   - LLM (Llama 3 8B via OpenRouter) generates answer
-   - Prompt enforces strict grounding: only use provided context
-   - If context is insufficient, LLM responds "I don't know"
-   - Source documents are extracted from chunk metadata
-
-## 🔒 Error Handling
-
-The system includes robust error handling for:
-
-- Invalid PDF files
-- Empty documents
-- API key issues (401/403)
-- Rate limiting (429)
-- Timeouts
-- Network failures
-
-All errors are logged and returned with user-friendly messages.
-
-## 📝 Logging
-
-Backend uses `uvicorn.error` logger for:
-
-- Incoming requests
-- Document processing steps
-- Retrieval statistics
-- LLM API calls
-- Error traces
-
-## 🎓 Resume-Ready Bullet Points
-
-- **Built end-to-end RAG system** using FastAPI, ChromaDB, and OpenRouter, enabling semantic search over PDF documents with 95%+ answer accuracy grounded in source material
-
-- **Designed and implemented custom text chunking algorithm** (500-char chunks with 100-char overlap) and vector embedding pipeline using Sentence Transformers, achieving sub-second retrieval times for 1000+ document chunks
-
-- **Developed production-ready Next.js frontend** with TypeScript and Tailwind CSS, featuring real-time chat interface, file upload with progress tracking, and source attribution display
-
-- **Implemented robust error handling and logging** for LLM API failures, rate limiting, and network timeouts, ensuring 99%+ uptime and graceful degradation
-
-## 🛠️ Development
-
-### Backend Development
-
-- Hot reload enabled with `--reload` flag
-- API documentation at `/docs` (Swagger UI)
-- Alternative docs at `/redoc`
-
-### Frontend Development
-
-- Hot reload enabled by default
-- TypeScript strict mode enabled
-- Tailwind CSS for styling
-
-## 🚫 What's NOT Included
-
-- ❌ LangChain (custom implementation)
-- ❌ Docker (local development only)
-- ❌ Authentication (add as needed)
-- ❌ Database (ChromaDB handles storage)
-- ❌ Paid APIs (free tier only)
-
-## 🚀 Deployment
-
-### Prerequisites
-
-- OpenRouter API key (free tier available at [openrouter.ai](https://openrouter.ai))
-- GitHub account (for deployment platforms)
-
-### Backend Deployment (FastAPI)
-
-#### Option 1: Railway (Recommended)
-
-1. **Create a Railway account** at [railway.app](https://railway.app)
-
-2. **Connect your GitHub repository:**
-
-   - Click "New Project" → "Deploy from GitHub repo"
-   - Select your forked repository
-
-3. **Configure environment variables:**
-
-   - Go to your project settings
-   - Add environment variable: `OPENROUTER_API_KEY=your-api-key-here`
-
-4. **Deploy:**
-   - Railway will automatically detect Python and install dependencies
-   - Your API will be available at `https://your-project-name.up.railway.app`
-
-#### Option 2: Render
-
-1. **Create a Render account** at [render.com](https://render.com)
-
-2. **Create a new Web Service:**
-
-   - Connect your GitHub repo
-   - Set build command: `pip install -r requirements.txt`
-   - Set start command: `uvicorn server.main:app --host 0.0.0.0 --port $PORT`
-
-3. **Add environment variable:**
-
-   - `OPENROUTER_API_KEY=your-api-key-here`
-
-4. **Deploy**
-
-### Frontend Deployment (Next.js)
-
-#### Vercel (Recommended)
-
-1. **Create a Vercel account** at [vercel.com](https://vercel.com)
-
-2. **Connect your GitHub repository:**
-
-   - Click "New Project" → "Import Git Repository"
-   - Select your repository
-
-3. **Configure build settings:**
-
-   - Framework Preset: Next.js
-   - Root Directory: `frontend`
-   - Build Command: `npm run build`
-   - Output Directory: `.next`
-
-4. **Add environment variable:**
-
-   - `OPENROUTER_API_KEY=your-api-key-here` (for frontend if needed)
-
-5. **Update API URLs:**
-
-   - In `frontend/services/api.ts`, change the base URL to your deployed backend URL
-   - Example: `const API_BASE_URL = 'https://your-backend-url.up.railway.app';`
-
-6. **Deploy**
-
-### Alternative Deployment Options
-
-#### Backend Alternatives:
-
-- **Heroku**: Free tier available, but deprecated
-- **AWS EC2**: More complex, but full control
-- **Google Cloud Run**: Serverless option
-
-#### Frontend Alternatives:
-
-- **Netlify**: Similar to Vercel
-- **GitHub Pages**: Free, but limited to static sites
-- **AWS S3 + CloudFront**: For static hosting
-
-### Production Considerations
-
-1. **Environment Variables:**
-
-   - Never commit API keys to Git
-   - Use platform-specific environment variable management
-
-2. **Database Persistence:**
-
-   - ChromaDB data is stored locally by default
-   - For production, consider using a persistent volume or cloud storage
-
-3. **CORS:**
-
-   - Update CORS settings in `backend/server/main.py` for your frontend domain
-
-4. **Security:**
-
-   - Consider adding authentication if needed
-   - Rate limiting for API endpoints
-
-5. **Monitoring:**
-   - Add logging and monitoring for production deployments
-
-### Quick Deploy Script
-
-For Railway + Vercel deployment:
-
-```bash
-# 1. Push code to GitHub
-git add .
-git commit -m "Ready for deployment"
-git push origin main
-
-# 2. Deploy backend on Railway (connect repo)
-
-# 3. Deploy frontend on Vercel (connect repo, set root to 'frontend')
-```
-
-## 📄 License
-
-This project is for educational and portfolio purposes.
+## 🔒 Security & Performance
+
+- **API Key Protection**: Keys stored as environment variables
+- **CORS Configuration**: Restricted to allowed origins
+- **Input Validation**: File type and content validation
+- **Error Handling**: Comprehensive error responses
+- **Rate Limiting**: Handled by OpenRouter API
+- **Timeout Management**: Reasonable timeouts for all operations
 
 ## 🤝 Contributing
 
-This is a portfolio project. Feel free to fork and modify for your own use.
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- **OpenRouter** for AI model access
+- **ChromaDB** for vector database
+- **FastAPI** for backend framework
+- **Next.js** for frontend framework
+- **Tailwind CSS** for styling
+- **Framer Motion** for animations
+
+## 📞 Support
+
+For issues and questions:
+
+- Check existing GitHub issues
+- Create new issue with detailed description
+- Include error logs and reproduction steps
 
 ---
 
-**Built with ❤️ for AI/ML and Full-Stack Engineering portfolios**
+Built with ❤️ using modern web technologies and AI
