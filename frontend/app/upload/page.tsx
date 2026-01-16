@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { uploadPDF, UploadResponse, testConnection } from "@/services/api";
@@ -23,6 +23,22 @@ export default function UploadPage() {
       .then(setBackendConnected)
       .catch(() => setBackendConnected(false));
   }, []);
+
+  const floatingLinesProps = useMemo(
+    () => ({
+      linesGradient: ["#7547f5", "#2fc182", "#b8f547"],
+      animationSpeed: 1.5,
+      interactive: true,
+      bendRadius: 5,
+      bendStrength: -1.2,
+      mouseDamping: 0.1,
+      parallax: true,
+      parallaxStrength: 0.4,
+      topWavePosition: { x: 10.0, y: 0.5, rotate: -0.4 },
+      middleWavePosition: { x: 5.0, y: 0.0, rotate: 0.2 },
+    }),
+    []
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -82,18 +98,7 @@ export default function UploadPage() {
     <div className="min-h-screen relative overflow-hidden p-4">
       {/* FloatingLines background */}
       <div className="absolute inset-0 -z-30">
-        <FloatingLines
-          linesGradient={["#7547f5", "#2fc182", "#b8f547"]}
-          animationSpeed={1.5}
-          interactive
-          bendRadius={5}
-          bendStrength={-1.2}
-          mouseDamping={0.1}
-          parallax
-          parallaxStrength={0.4}
-          topWavePosition={{ x: 10.0, y: 0.5, rotate: -0.4 }}
-          middleWavePosition={{ x: 5.0, y: 0.0, rotate: 0.2 }}
-        />
+        <FloatingLines {...floatingLinesProps} />
       </div>
 
       {/* Dark overlay */}

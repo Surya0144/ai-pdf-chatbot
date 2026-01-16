@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { sendChatMessage, ChatResponse } from "@/services/api";
@@ -22,6 +22,19 @@ export default function ChatPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const floatingLinesProps = useMemo(
+    () => ({
+      linesGradient: ["#6366f1", "#38bdf8", "#bef264"],
+      animationSpeed: 1.2,
+      interactive: true,
+      parallax: true,
+      parallaxStrength: 0.3,
+      topWavePosition: { x: 10.0, y: 0.2, rotate: -0.4 },
+      middleWavePosition: { x: 5.0, y: 0.5, rotate: 0.2 },
+    }),
+    []
+  );
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
@@ -229,27 +242,17 @@ export default function ChatPage() {
           <motion.button
             onClick={handleSend}
             disabled={!input.trim() || loading}
-            whileHover={{ scale: 1.08 }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="h-12 w-12 rounded-full 
-            bg-indigo-500 hover:bg-green-400 
-            disabled:bg-gray-400 
-            text-white 
+            className="px-6 py-3 rounded-full
+            bg-indigo-500 hover:bg-green-400
+            disabled:bg-gray-400
+            text-white font-semibold
             transition-colors duration-300
             shadow-[0_8px_30px_rgba(99,102,241,0.5)]
             flex items-center justify-center"
           >
-            <motion.span
-              animate={{ x: [0, 6, 0] }}
-              transition={{
-                duration: 1.2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="text-xl font-bold"
-            >
-              →
-            </motion.span>
+            Send
           </motion.button>
         </div>
       </motion.footer>

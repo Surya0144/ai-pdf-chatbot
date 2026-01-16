@@ -11,6 +11,11 @@ def retrieve_context(query: str, top_k: int = 5):
     Returns documents and their metadata.
     """
     try:
+        # Check if collection has any documents
+        if _collection.count() == 0:
+            logger.info("No documents in collection")
+            return [], []
+
         # Generate embedding for the query using the API-based embedder
         query_embedding = embed_query(query)
         
