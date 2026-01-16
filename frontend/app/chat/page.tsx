@@ -3,7 +3,12 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { sendChatMessage, ChatResponse } from "@/services/api";
+import {
+  sendChatMessage,
+  ChatResponse,
+  getUploadedPDFs,
+  UploadedPDFsResponse,
+} from "@/services/api";
 import FloatingLines from "@/components/FloatingLines";
 
 interface Message {
@@ -17,11 +22,24 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploadedPDFs, setUploadedPDFs] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    const fetchUploadedPDFs = async () => {
+      try {
+        const response: UploadedPDFsResponse = await getUploadedPDFs();
+        setUploadedPDFs(response.pdfs);
+      } catch (error) {
+        console.error("Failed to fetch uploaded PDFs:", error);
+      }
+    };
+    fetchUploadedPDFs();
+  }, []);
 
   const floatingLinesProps = useMemo(
     () => ({
@@ -99,6 +117,21 @@ export default function ChatPage() {
             <p className="text-xs text-gray-600">
               Grounded answers from your PDFs
             </p>
+            {uploadedPDFs.length > 0 && (
+              <div className="mt-2">
+                <p className="text-xs text-gray-500 mb-1">Uploaded PDFs:</p>
+                <div className="flex flex-wrap gap-1">
+                  {uploadedPDFs.map((pdf, idx) => (
+                    <span
+                      key={idx}
+                      className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full"
+                    >
+                      {pdf}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex gap-4 text-sm">
             <button

@@ -72,6 +72,15 @@ export const sendChatMessage = async (
   return response.data;
 };
 
+export interface UploadedPDFsResponse {
+  pdfs: string[];
+}
+
+export const getUploadedPDFs = async (): Promise<UploadedPDFsResponse> => {
+  const response = await api.get<UploadedPDFsResponse>("/chat/uploaded-pdfs");
+  return response.data;
+};
+
 // Test backend connection - use the configured API base URL
 export const testConnection = async (): Promise<boolean> => {
   try {

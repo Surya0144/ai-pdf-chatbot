@@ -15,6 +15,15 @@ _client = chromadb.PersistentClient(
 _collection = _client.get_or_create_collection(name="documents")
 
 
+def clear_collection() -> None:
+    """
+    Clear all documents from the vector database.
+    """
+    global _collection
+    _client.delete_collection(name="documents")
+    _collection = _client.get_or_create_collection(name="documents")
+
+
 def store_chunks(chunks: list[str], embeddings: Any, metadata: list[dict[str, Any]]) -> None:
     """
     Store document chunks with their embeddings in the vector database.

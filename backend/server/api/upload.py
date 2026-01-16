@@ -6,7 +6,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from server.ingestion.loader import load_pdf
 from server.ingestion.chunker import chunk_text
 from server.ingestion.embedder import embed_chunks
-from server.vectorstore.chroma import store_chunks
+from server.vectorstore.chroma import store_chunks, clear_collection
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -20,7 +20,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 async def upload_document(file: UploadFile = File(...)):
     try:
         # Validate file type
-        if not file.filename.lower().endswith('.pdf'):
+        if not file.filename or not file.filename.lower().endswith('.pdf'):
             raise HTTPException(status_code=400, detail="Only PDF files are supported")
 
         logger.info(f"Uploading file: {file.filename}")
@@ -50,6 +50,10 @@ async def upload_document(file: UploadFile = File(...)):
         # Generate embeddings
         embeddings = embed_chunks(chunks)
         logger.info(f"Generated embeddings for {len(chunks)} chunks")
+
+        # Clear existing documents before storing new ones
+        clear_collection()
+        logger.info("Cleared existing documents from vector database")
 
         # Store in vector database
         metadata = [{"source": file.filename} for _ in chunks]
