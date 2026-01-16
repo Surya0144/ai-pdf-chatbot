@@ -5,11 +5,13 @@ A modern, full-stack web application that enables intelligent document search an
 ## 🚀 Features
 
 - **PDF Document Upload**: Securely upload and process PDF files
+- **Single Document Focus**: Each new upload replaces previous documents, ensuring queries only use the latest PDF
 - **Intelligent Chunking**: Automatic text segmentation for optimal retrieval
 - **Vector Embeddings**: State-of-the-art embeddings using OpenAI's text-embedding-3-small
 - **Semantic Search**: Find relevant information using vector similarity
 - **AI-Powered Q&A**: Get precise answers using Meta's Llama 3.1 8B model
 - **Source Citations**: Every answer includes references to source documents
+- **Uploaded PDFs Display**: View currently loaded documents in the chat interface
 - **Modern UI**: Beautiful, responsive interface with smooth animations
 - **Real-time Chat**: Interactive conversation interface
 - **CORS Support**: Configurable cross-origin resource sharing
