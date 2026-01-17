@@ -9,7 +9,7 @@ A modern, full-stack web application that enables intelligent document search an
 - **Intelligent Chunking**: Automatic text segmentation for optimal retrieval
 - **Vector Embeddings**: State-of-the-art embeddings using OpenAI's text-embedding-3-small
 - **Semantic Search**: Find relevant information using vector similarity
-- **AI-Powered Q&A**: Get precise answers using Meta's Llama 3.1 8B model
+- **AI-Powered Q&A**: Get precise answers using Mistral's Devstral 2512 model
 - **Source Citations**: Every answer includes references to source documents
 - **Uploaded PDFs Display**: View currently loaded documents in the chat interface
 - **Modern UI**: Beautiful, responsive interface with smooth animations
@@ -150,7 +150,7 @@ NEXT_PUBLIC_API_BASE_URL=https://your-backend.onrender.com/api
 ### Model Configuration
 
 - **Embedding Model**: `openai/text-embedding-3-small`
-- **Chat Model**: `meta-llama/llama-3.1-8b-instruct:free`
+- **Chat Model**: `mistralai/devstral-2512:free`
 - **Chunk Size**: Configurable in `chunker.py`
 - **Top-K Retrieval**: Default 5 chunks per query
 
