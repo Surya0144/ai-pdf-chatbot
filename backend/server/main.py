@@ -31,10 +31,10 @@ app.add_middleware(
 app.include_router(upload_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def root():
     return {"message": "AI Document Search Backend API", "docs": "/docs"}
 
-@app.get("/health", tags=["Health"])
+@app.api_route("/health", methods=["GET", "HEAD"], tags=["Health"])
 async def health_check():
     return {"status": "up", "details": "All systems functional"}
