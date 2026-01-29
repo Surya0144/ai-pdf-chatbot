@@ -13,7 +13,7 @@ OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Use a reliable free model from OpenRouter
-MODEL_NAME = "mistralai/devstral-2512:free"
+MODEL_NAME = "google/gemini-3-flash-preview"
 
 
 def generate_answer(question: str, context_chunks: list[str]) -> str:
